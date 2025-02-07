@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme de Parrainage EvoFinance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background: #16213e;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.3);
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background: #00d4ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ffcc00;
+            color: black;
+        }
+        .referral-link {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Programme de Parrainage EvoFinance</h1>
+    <p>Votre lien de parrainage :</p>
+    <p class="referral-link" id="referralLink">Génération...</p>
+    <button onclick="copyReferralLink()">📋 Copier</button>
+
+    <h2>Votre Équipe</h2>
+    <p>Nombre de personnes recrutées : <span id="teamSize">0</span></p>
+    <p>Bonus 2% sur chaque personne recrutée : <span id="bonus">0</span> $</p>
+</div>
+
+<script>
+    const BASE_URL = "https://site-web-asa-en-ligne-m-da-6fzi.vercel.app/";
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get("ref");
+
+    function generateUserId() {
+        return "USR" + Math.floor(Math.random() * 100000);
+    }
+
+    function generateReferralLink(userId) {
+        return `${BASE_URL}?ref=${userId}`;
+    }
+
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+        userId = generateUserId();
+        localStorage.setItem("userId", userId);
+    }
+
+    document.getElementById("referralLink").textContent = generateReferralLink(userId);
+
+    function copyReferralLink() {
+        const link = generateReferralLink(userId);
+        navigator.clipboard.writeText(link).then(() => {
+            alert("Lien copié !");
+        });
+    }
+
+    if (refCode) {
+        let referredUsers = JSON.parse(localStorage.getItem("referredUsers")) || {};
+        if (!referredUsers[refCode]) {
+            referredUsers[refCode] = [];
+        }
+        referredUsers[refCode].push(userId);
+        localStorage.setItem("referredUsers", JSON.stringify(referredUsers));
+    }
+
+    function updateTeamSize() {
+        let referredUsers = JSON.parse(localStorage.getItem("referredUsers")) || {};
+        let teamSize = referredUsers[userId] ? referredUsers[userId].length : 0;
+        document.getElementById("teamSize").textContent = teamSize;
+        let bonus = teamSize * 0.02; // 2% de bonus par personne recrutée
+        document.getElementById("bonus").textContent = bonus.toFixed(2);
+    }
+
+    updateTeamSize();
+</script>
+
+</body>
+</html>
