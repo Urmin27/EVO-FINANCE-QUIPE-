@@ -1,106 +1,373 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programme de Parrainage EvoFinance</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #1a1a2e;
-            color: white;
-        }
-        .container {
-            width: 50%;
-            margin: auto;
-            padding: 20px;
-            background: #16213e;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.3);
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        button {
-            background: #00d4ff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background: #ffcc00;
-            color: black;
-        }
-        .referral-link {
-            font-weight: bold;
-            color: #00d4ff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lien Référal - Inscription & Connexion</title>
+  <!-- Importation de la police Roboto -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 2.5em;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    }
+    .container {
+      max-width: 600px;
+      background: #fff;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 1s;
+    }
+    /* Referral Dashboard */
+    #referralDashboard {
+      display: none;
+    }
+    #referralDashboard h2 {
+      margin-bottom: 15px;
+      color: #1e3c72;
+    }
+    .copy-field {
+      display: flex;
+      margin-top: 10px;
+    }
+    .copy-field input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+    .copy-field button {
+      padding: 8px;
+      border: none;
+      background: #2196f3;
+      color: #fff;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    /* Auth Section (Inscription / Connexion) */
+    #authSection {
+      display: none;
+    }
+    .tab-buttons {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .tab-buttons button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    form {
+      display: none;
+      flex-direction: column;
+    }
+    form.active {
+      display: flex;
+    }
+    form label {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: left;
+    }
+    form input, form select {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    form button {
+      margin-top: 15px;
+      padding: 10px;
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    p.center {
+      text-align: center;
+    }
+    a {
+      color: #2196f3;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container { width: 90%; }
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Programme de Parrainage EvoFinance</h1>
-    <p>Votre lien de parrainage :</p>
-    <p class="referral-link" id="referralLink">Génération...</p>
-    <button onclick="copyReferralLink()">📋 Copier</button>
-
-    <h2>Votre Équipe</h2>
-    <p>Nombre de personnes recrutées : <span id="teamSize">0</span></p>
-    <p>Bonus 2% sur chaque personne recrutée : <span id="bonus">0</span> $</p>
-</div>
-
-<script>
-    const BASE_URL = "https://evo-finance-inscription.vercel.app//";
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get("ref");
-
-    function generateUserId() {
-        return "USR" + Math.floor(Math.random() * 100000);
+  <h1>Lien Référal</h1>
+  <div class="container">
+    <!-- Referral Dashboard (affiché si aucun paramètre "ref" n'est présent) -->
+    <div id="referralDashboard">
+      <h2>Votre Lien d'Invitation</h2>
+      <div class="copy-field">
+        <input type="text" id="invitationLink" readonly>
+        <button id="copyInvitation">Copier</button>
+      </div>
+      <h3>Tableau de Parrainage</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre de Parrainages</th>
+            <th>Bonus Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="parrainageCount">0</td>
+            <td id="bonusTotal">0.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="center">
+        <a href="?ref=YOUR_INVITATION_CODE" id="goAuth">S'inscrire / Se Connecter</a>
+      </p>
+    </div>
+    
+    <!-- Auth Section (affiché si le paramètre "ref" est présent dans l'URL) -->
+    <div id="authSection">
+      <div class="tab-buttons">
+        <button id="showInscription">Inscription</button>
+        <button id="showConnexion">Connexion</button>
+      </div>
+      <!-- Formulaire d'inscription -->
+      <form id="inscriptionForm" class="active">
+        <h3>Inscription</h3>
+        <label for="username">Nom d'utilisateur :</label>
+        <input type="text" id="username" required>
+        
+        <label for="phone">Numéro de téléphone :</label>
+        <input type="text" id="phone" required>
+        
+        <label for="email">Email :</label>
+        <input type="email" id="email" required>
+        
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" required>
+        
+        <label id="captchaLabel"></label>
+        <input type="text" id="captchaAnswer" required>
+        
+        <!-- Code d'invitation auto-rempli à partir de l'URL -->
+        <label for="invitationCode">Code d'invitation :</label>
+        <input type="text" id="invitationCode" readonly>
+        
+        <button type="submit">S'inscrire</button>
+        <p class="center">Déjà un compte ? <a href="#" id="linkConnexion">Se connecter</a></p>
+      </form>
+      
+      <!-- Formulaire de connexion -->
+      <form id="connexionForm">
+        <h3>Connexion</h3>
+        <label for="loginPhone">Numéro de téléphone :</label>
+        <input type="text" id="loginPhone" required>
+        
+        <label for="loginPassword">Mot de passe :</label>
+        <input type="password" id="loginPassword" required>
+        
+        <button type="submit">Se connecter</button>
+        <p class="center"><a href="#" id="forgotPassword">Mot de passe oublié ?</a></p>
+        <p class="center">Pas de compte ? <a href="#" id="linkInscription">S'inscrire</a></p>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    // Fonction pour obtenir un paramètre de l'URL
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
-
-    function generateReferralLink(userId) {
-        return `${BASE_URL}?ref=${userId}`;
-    }
-
-    let userId = localStorage.getItem("userId");
-    if (!userId) {
-        userId = generateUserId();
-        localStorage.setItem("userId", userId);
-    }
-
-    document.getElementById("referralLink").textContent = generateReferralLink(userId);
-
-    function copyReferralLink() {
-        const link = generateReferralLink(userId);
-        navigator.clipboard.writeText(link).then(() => {
-            alert("Lien copié !");
-        });
-    }
-
-    if (refCode) {
-        let referredUsers = JSON.parse(localStorage.getItem("referredUsers")) || {};
-        if (!referredUsers[refCode]) {
-            referredUsers[refCode] = [];
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      // Détection du paramètre "ref"
+      let refParam = getParameterByName("ref");
+      if (refParam) {
+        // Afficher la section Auth (inscription/connexion)
+        document.getElementById("authSection").style.display = "block";
+        document.getElementById("referralDashboard").style.display = "none";
+        // Pré-remplir le champ Code d'invitation
+        document.getElementById("invitationCode").value = refParam;
+      } else {
+        // Afficher le dashboard de parrainage
+        document.getElementById("authSection").style.display = "none";
+        document.getElementById("referralDashboard").style.display = "block";
+        // Pour cet exemple, on définit un code d'invitation par défaut (à remplacer par la valeur réelle du parrain)
+        let parrainCode = "ABC123";
+        let baseUrl = window.location.href.split('?')[0];
+        document.getElementById("invitationLink").value = baseUrl + "?ref=" + parrainCode;
+        // Simuler quelques statistiques
+        document.getElementById("parrainageCount").innerText = "5";
+        document.getElementById("bonusTotal").innerText = "0.05";
+      }
+      
+      // Gestion des onglets dans la section Auth
+      document.getElementById("showInscription").addEventListener("click", function() {
+        document.getElementById("inscriptionForm").classList.add("active");
+        document.getElementById("connexionForm").classList.remove("active");
+      });
+      document.getElementById("showConnexion").addEventListener("click", function() {
+        document.getElementById("connexionForm").classList.add("active");
+        document.getElementById("inscriptionForm").classList.remove("active");
+      });
+      document.getElementById("linkConnexion").addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("connexionForm").classList.add("active");
+        document.getElementById("inscriptionForm").classList.remove("active");
+      });
+      document.getElementById("linkInscription").addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("inscriptionForm").classList.add("active");
+        document.getElementById("connexionForm").classList.remove("active");
+      });
+      
+      // Génération d'un captcha simple
+      let a = Math.floor(Math.random() * 10) + 1;
+      let b = Math.floor(Math.random() * 10) + 1;
+      document.getElementById("captchaLabel").innerText = "Combien font " + a + " + " + b + " ?";
+      let captchaResult = a + b;
+      
+      // Gestion du formulaire d'inscription
+      document.getElementById("inscriptionForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let username = document.getElementById("username").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let password = document.getElementById("password").value;
+        let captchaAnswer = parseInt(document.getElementById("captchaAnswer").value);
+        let invitationCode = document.getElementById("invitationCode").value.trim();
+        
+        if (captchaAnswer !== captchaResult) {
+          alert("Captcha incorrect. Veuillez réessayer.");
+          return;
         }
-        referredUsers[refCode].push(userId);
-        localStorage.setItem("referredUsers", JSON.stringify(referredUsers));
-    }
-
-    function updateTeamSize() {
-        let referredUsers = JSON.parse(localStorage.getItem("referredUsers")) || {};
-        let teamSize = referredUsers[userId] ? referredUsers[userId].length : 0;
-        document.getElementById("teamSize").textContent = teamSize;
-        let bonus = teamSize * 0.02; // 2% de bonus par personne recrutée
-        document.getElementById("bonus").textContent = bonus.toFixed(2);
-    }
-
-    updateTeamSize();
-</script>
-
+        
+        // Vérifier l'unicité des données
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        if (users.find(u => u.username === username)) {
+          alert("Nom d'utilisateur déjà utilisé.");
+          return;
+        }
+        if (users.find(u => u.phone === phone)) {
+          alert("Numéro de téléphone déjà utilisé.");
+          return;
+        }
+        if (users.find(u => u.email === email)) {
+          alert("Email déjà utilisé.");
+          return;
+        }
+        
+        // Générer un code d'invitation pour le nouvel utilisateur (6 chiffres)
+        let newInvCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        let newUser = {
+          username: username,
+          phone: phone,
+          email: email,
+          password: password,
+          invitationCode: newInvCode,
+          referralCount: 0,
+          bonus: 0,
+          withdrawableBonus: 0
+        };
+        
+        users.push(newUser);
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("currentUser", JSON.stringify(newUser));
+        
+        // Si un code d'invitation a été utilisé, mettre à jour le parrain
+        if (invitationCode) {
+          let refUser = users.find(u => u.invitationCode === invitationCode);
+          if (refUser) {
+            refUser.referralCount = (refUser.referralCount || 0) + 1;
+            refUser.bonus = (refUser.bonus || 0) + 0.01;
+            localStorage.setItem("users", JSON.stringify(users));
+          }
+        }
+        
+        alert("Inscription réussie !");
+        inscriptionForm.reset();
+      });
+      
+      // Gestion du formulaire de connexion
+      document.getElementById("connexionForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let phone = document.getElementById("loginPhone").value.trim();
+        let password = document.getElementById("loginPassword").value;
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let user = users.find(u => u.phone === phone && u.password === password);
+        if (!user) {
+          alert("Numéro de téléphone ou mot de passe incorrect.");
+          return;
+        }
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        alert("Connexion réussie !");
+        connexionForm.reset();
+      });
+      
+      // Mot de passe oublié
+      document.getElementById("forgotPassword").addEventListener("click", function(e) {
+        e.preventDefault();
+        let phone = prompt("Veuillez entrer votre numéro de téléphone :");
+        if (!phone) return;
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let user = users.find(u => u.phone === phone.trim());
+        if (user) {
+          alert("Votre mot de passe est : " + user.password);
+        } else {
+          alert("Numéro de téléphone non trouvé.");
+        }
+      });
+      
+      // Copier le lien d'invitation
+      document.getElementById("copyInvitation").addEventListener("click", function() {
+        let invitationLink = document.getElementById("invitationLink");
+        invitationLink.select();
+        invitationLink.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("Lien d'invitation copié !");
+      });
+    });
+  </script>
 </body>
 </html>
