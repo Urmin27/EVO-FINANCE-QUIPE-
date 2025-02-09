@@ -270,14 +270,14 @@
       // Gestion du formulaire d'inscription
       document.getElementById("inscriptionForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        let username = document.getElementById("username").value.trim();
-        let phone = document.getElementById("phone").value.trim();
-        let email = document.getElementById("email").value.trim();
-        let password = document.getElementById("password").value;
-        let captchaAnswer = parseInt(document.getElementById("captchaAnswer").value);
-        let invitationCode = document.getElementById("invitationCode").value.trim();
+        const username = document.getElementById("username").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const enteredCaptcha = parseInt(document.getElementById("captchaAnswer").value);
+        const invitationCodeFromForm = document.getElementById("invitationCode").value.trim();
         
-        if (captchaAnswer !== captchaResult) {
+        if (enteredCaptcha !== captchaResult) {
           alert("Captcha incorrect. Veuillez réessayer.");
           return;
         }
@@ -297,7 +297,7 @@
           return;
         }
         
-        // Générer un code d'invitation pour le nouvel utilisateur (6 chiffres)
+        // Générer un code d'invitation unique pour le nouvel utilisateur (6 chiffres)
         let newInvCode = Math.floor(100000 + Math.random() * 900000).toString();
         
         let newUser = {
@@ -316,8 +316,8 @@
         localStorage.setItem("currentUser", JSON.stringify(newUser));
         
         // Si un code d'invitation a été utilisé, mettre à jour le parrain
-        if (invitationCode) {
-          let refUser = users.find(u => u.invitationCode === invitationCode);
+        if (invitationCodeFromForm) {
+          let refUser = users.find(u => u.invitationCode === invitationCodeFromForm);
           if (refUser) {
             refUser.referralCount = (refUser.referralCount || 0) + 1;
             refUser.bonus = (refUser.bonus || 0) + 0.01;
@@ -326,14 +326,14 @@
         }
         
         alert("Inscription réussie !");
-        inscriptionForm.reset();
+        document.getElementById("inscriptionForm").reset();
       });
       
       // Gestion du formulaire de connexion
       document.getElementById("connexionForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        let phone = document.getElementById("loginPhone").value.trim();
-        let password = document.getElementById("loginPassword").value;
+        const phone = document.getElementById("loginPhone").value.trim();
+        const password = document.getElementById("loginPassword").value;
         let users = JSON.parse(localStorage.getItem("users") || "[]");
         let user = users.find(u => u.phone === phone && u.password === password);
         if (!user) {
@@ -342,7 +342,8 @@
         }
         localStorage.setItem("currentUser", JSON.stringify(user));
         alert("Connexion réussie !");
-        connexionForm.reset();
+        // Redirection vers le site web après connexion
+        window.location.href = "https://www.evo-finance.com";
       });
       
       // Mot de passe oublié
@@ -367,6 +368,7 @@
         document.execCommand("copy");
         alert("Lien d'invitation copié !");
       });
+      
     });
   </script>
 </body>
