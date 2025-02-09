@@ -7,7 +7,7 @@
   <!-- Importation de la police Roboto -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
   <style>
-    /* Global Styles */
+    /* Réinitialisation et styles globaux */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto', sans-serif;
@@ -68,6 +68,20 @@
     th, td {
       padding: 10px;
       text-align: center;
+    }
+    /* Bouton Ajouter Bonus */
+    #addBonusBtn {
+      margin-top: 15px;
+      padding: 10px;
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    #addBonusBtn:hover {
+      transform: scale(1.05);
     }
     /* Auth Section (Inscription / Connexion) */
     #authSection {
@@ -145,7 +159,7 @@
         <thead>
           <tr>
             <th>Nombre de Parrainages</th>
-            <th>Bonus Total</th>
+            <th>Bonus Total ($)</th>
           </tr>
         </thead>
         <tbody>
@@ -155,6 +169,8 @@
           </tr>
         </tbody>
       </table>
+      <!-- Bouton pour ajouter le bonus (seulement si bonus >= 5$) -->
+      <button id="addBonusBtn">Ajouter Bonus</button>
       <p class="center">
         <a href="?ref=YOUR_INVITATION_CODE" id="goAuth">S'inscrire / Se Connecter</a>
       </p>
@@ -232,7 +248,7 @@
         // Afficher le dashboard de parrainage
         document.getElementById("authSection").style.display = "none";
         document.getElementById("referralDashboard").style.display = "block";
-        // Pour cet exemple, on définit un code d'invitation par défaut (à remplacer par la valeur réelle du parrain)
+        // Pour cet exemple, on définit un code d'invitation par défaut (remplacez-le par celui du parrain)
         let parrainCode = "ABC123";
         let baseUrl = window.location.href.split('?')[0];
         document.getElementById("invitationLink").value = baseUrl + "?ref=" + parrainCode;
@@ -279,6 +295,11 @@
         
         if (enteredCaptcha !== captchaResult) {
           alert("Captcha incorrect. Veuillez réessayer.");
+          // Régénérer le captcha en cas d'erreur
+          a = Math.floor(Math.random() * 10) + 1;
+          b = Math.floor(Math.random() * 10) + 1;
+          document.getElementById("captchaLabel").innerText = "Combien font " + a + " + " + b + " ?";
+          captchaResult = a + b;
           return;
         }
         
@@ -369,7 +390,36 @@
         alert("Lien d'invitation copié !");
       });
       
-    });
+      // Bouton "Ajouter Bonus" : si bonus >= 5, le transférer et réinitialiser le bonus à 0
+      document.getElementById("addBonusBtn").addEventListener("click", function() {
+        let currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+        if (!currentUser) {
+          alert("Veuillez vous connecter pour ajouter votre bonus.");
+          return;
+        }
+        if (currentUser.bonus < 5) {
+          alert("Bonus insuffisant. Vous devez avoir au moins 5$ de bonus pour l'ajouter.");
+          return;
+        }
+        // Transférer le bonus vers withdrawableBonus et réinitialiser bonus
+        currentUser.withdrawableBonus = (currentUser.withdrawableBonus || 0) + currentUser.bonus;
+        currentUser.bonus = 0;
+        // Mettre à jour l'utilisateur dans le tableau des utilisateurs
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].phone === currentUser.phone) {
+            users[i] = currentUser;
+            break;
+          }
+        }
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        // Mise à jour de l'affichage du bonus dans le dashboard
+        document.getElementById("bonusTotal").innerText = "0.00";
+        alert("Bonus ajouté et transféré !");
+      });
+      
+    }); // Fin DOMContentLoaded
   </script>
 </body>
 </html>
