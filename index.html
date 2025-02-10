@@ -153,10 +153,10 @@
           </tr>
         </tbody>
       </table>
-      <!-- Bouton Ajouter Bonus (seulement si bonus >= 5$) -->
+      <!-- Bouton Ajouter Bonus -->
       <button id="addBonusBtn">Ajouter Bonus</button>
       
-      <!-- Paragraphe présentant les avantages du parrainage -->
+      <!-- Paragraphe des avantages du parrainage -->
       <div class="benefits">
         <h3>Avantages du Système de Parrainage</h3>
         <ul>
@@ -169,7 +169,7 @@
       </div>
       
       <p class="center">
-        <a href="?ref=YOUR_INVITATION_CODE" id="goAuth">S'inscrire / Se Connecter</a>
+        <a href="?ref=ABC123" id="goAuth">S'inscrire / Se Connecter</a>
       </p>
     </div>
     
@@ -197,7 +197,7 @@
         <label id="captchaLabel"></label>
         <input type="text" id="captchaAnswer" required>
         
-        <!-- Code d'invitation auto-rempli à partir de l'URL -->
+        <!-- Code d'invitation auto-rempli -->
         <label for="invitationCode">Code d'invitation :</label>
         <input type="text" id="invitationCode" readonly>
         
@@ -232,10 +232,10 @@
       return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
     
-    // Fonction pour mettre à jour le dashboard de parrainage (si disponible)
+    // Fonction pour mettre à jour le dashboard de parrainage
     function updateDashboard() {
       let users = JSON.parse(localStorage.getItem("users") || "[]");
-      // Ici, nous utilisons le code par défaut "ABC123" comme identifiant du parrain si aucun ref n'est passé.
+      // On utilise ici le code du parrain, par défaut "ABC123"
       let parent = users.find(u => u.invitationCode === "ABC123");
       if (parent) {
         document.getElementById("parrainageCount").innerText = parent.referralCount || 0;
@@ -244,23 +244,35 @@
     }
     
     document.addEventListener("DOMContentLoaded", function() {
-      // Détection du paramètre "ref"
+      // Si aucun paramètre "ref" n'est présent, afficher le dashboard
       let refParam = getParameterByName("ref");
       if (refParam) {
-        // Si le paramètre "ref" est présent, on affiche la section Auth (inscription/connexion)
         document.getElementById("authSection").style.display = "block";
         document.getElementById("referralDashboard").style.display = "none";
-        // Pré-remplir le champ Code d'invitation
         document.getElementById("invitationCode").value = refParam;
       } else {
-        // Sinon, afficher le dashboard de parrainage
         document.getElementById("authSection").style.display = "none";
         document.getElementById("referralDashboard").style.display = "block";
-        // Pour cet exemple, on définit un code d'invitation par défaut
-        let parrainCode = "ABC123";
+        // S'assurer que le parrain (code "ABC123") existe dans le localStorage
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let parent = users.find(u => u.invitationCode === "ABC123");
+        if (!parent) {
+          parent = {
+            username: "Parrain",
+            phone: "0000000000",
+            email: "parrain@example.com",
+            password: "default",
+            invitationCode: "ABC123",
+            referralCount: 0,
+            bonus: 0,
+            withdrawableBonus: 0
+          };
+          users.push(parent);
+          localStorage.setItem("users", JSON.stringify(users));
+        }
+        // Générer le lien d'invitation pour le parrain
         let baseUrl = window.location.href.split('?')[0];
-        document.getElementById("invitationLink").value = baseUrl + "?ref=" + parrainCode;
-        // Simuler quelques statistiques (vous pouvez appeler updateDashboard() si le parrain existe dans localStorage)
+        document.getElementById("invitationLink").value = baseUrl + "?ref=" + parent.invitationCode;
         updateDashboard();
       }
       
@@ -275,7 +287,6 @@
       
       // Gestion du bouton "Ajouter Bonus"
       document.getElementById("addBonusBtn").addEventListener("click", function() {
-        // On suppose que le parrain est identifié par le code "ABC123"
         let users = JSON.parse(localStorage.getItem("users") || "[]");
         let parent = users.find(u => u.invitationCode === "ABC123");
         if (!parent) {
@@ -286,7 +297,6 @@
           alert("Bonus insuffisant. Vous devez avoir au moins 5$ pour l'ajouter.");
           return;
         }
-        // Transférer le bonus vers le solde de retrait (withdrawableBonus) et réinitialiser le bonus
         parent.withdrawableBonus = (parent.withdrawableBonus || 0) + parent.bonus;
         parent.bonus = 0;
         localStorage.setItem("users", JSON.stringify(users));
@@ -332,7 +342,6 @@
         
         if (enteredCaptcha !== captchaResult) {
           alert("Captcha incorrect. Veuillez réessayer.");
-          // Régénérer le captcha en cas d'erreur
           a = Math.floor(Math.random() * 10) + 1;
           b = Math.floor(Math.random() * 10) + 1;
           document.getElementById("captchaLabel").innerText = "Combien font " + a + " + " + b + " ?";
@@ -340,7 +349,6 @@
           return;
         }
         
-        // Vérifier l'unicité des données
         let users = JSON.parse(localStorage.getItem("users") || "[]");
         if (users.find(u => u.username === username)) {
           alert("Nom d'utilisateur déjà utilisé.");
@@ -355,9 +363,7 @@
           return;
         }
         
-        // Générer un code d'invitation unique pour le nouvel utilisateur (6 chiffres)
         let newInvCode = Math.floor(100000 + Math.random() * 900000).toString();
-        
         let newUser = {
           username: username,
           phone: phone,
@@ -373,7 +379,6 @@
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("currentUser", JSON.stringify(newUser));
         
-        // Si un code d'invitation a été utilisé, mettre à jour le parrain
         if (invitationCodeFromForm) {
           let refUser = users.find(u => u.invitationCode === invitationCodeFromForm);
           if (refUser) {
@@ -385,8 +390,6 @@
         
         alert("Inscription réussie !");
         document.getElementById("inscriptionForm").reset();
-        // Optionnel : mettre à jour le dashboard si nous sommes en mode dashboard
-        updateDashboard();
       });
       
       // Gestion du formulaire de connexion
@@ -402,7 +405,6 @@
         }
         localStorage.setItem("currentUser", JSON.stringify(user));
         alert("Connexion réussie !");
-        // Redirection vers le site web après connexion
         window.location.href = "https://www.evo-finance.com";
       });
       
@@ -429,7 +431,7 @@
         alert("Lien d'invitation copié !");
       });
       
-    }); // Fin DOMContentLoaded
+    });
   </script>
 </body>
 </html>
