@@ -33,7 +33,7 @@
     }
     /* Referral Dashboard */
     #referralDashboard {
-      display: none;
+      margin-bottom: 20px;
     }
     #referralDashboard h2 {
       margin-bottom: 15px;
@@ -83,57 +83,41 @@
     #addBonusBtn:hover {
       transform: scale(1.05);
     }
-    /* Auth Section (Inscription / Connexion) */
-    #authSection {
-      display: none;
-    }
-    .tab-buttons {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .tab-buttons button {
-      padding: 10px 20px;
-      margin: 0 5px;
-      cursor: pointer;
-    }
-    form {
-      display: none;
-      flex-direction: column;
-    }
-    form.active {
-      display: flex;
-    }
-    form label {
-      margin-top: 10px;
-      font-weight: bold;
-      text-align: left;
-    }
-    form input, form select {
-      padding: 10px;
-      margin-top: 5px;
+    /* Paragraphe avantages */
+    .benefits {
+      margin-top: 20px;
+      padding: 15px;
       border: 1px solid #ccc;
       border-radius: 5px;
-      width: 100%;
+      background: #f9f9f9;
+      color: #333;
+      animation: fadeIn 1s;
     }
-    form button {
-      margin-top: 15px;
-      padding: 10px;
-      background: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .benefits h3 {
+      margin-bottom: 10px;
+      color: #1e3c72;
     }
-    p.center {
-      text-align: center;
+    .benefits ul {
+      text-align: left;
+      list-style-type: disc;
+      margin-left: 20px;
     }
-    a {
-      color: #2196f3;
-      text-decoration: none;
+    .benefits p {
+      margin-top: 10px;
+      font-style: italic;
     }
-    a:hover {
-      text-decoration: underline;
-    }
+    /* Auth Section (Inscription / Connexion) */
+    #authSection { display: none; }
+    .tab-buttons { text-align: center; margin-bottom: 20px; }
+    .tab-buttons button { padding: 10px 20px; margin: 0 5px; cursor: pointer; }
+    form { display: none; flex-direction: column; }
+    form.active { display: flex; }
+    form label { margin-top: 10px; font-weight: bold; text-align: left; }
+    form input, form select { padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; width: 100%; }
+    form button { margin-top: 15px; padding: 10px; background: #4caf50; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    p.center { text-align: center; }
+    a { color: #2196f3; text-decoration: none; }
+    a:hover { text-decoration: underline; }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -169,8 +153,21 @@
           </tr>
         </tbody>
       </table>
-      <!-- Bouton pour ajouter le bonus (seulement si bonus >= 5$) -->
+      <!-- Bouton Ajouter Bonus (seulement si bonus >= 5$) -->
       <button id="addBonusBtn">Ajouter Bonus</button>
+      
+      <!-- Paragraphe présentant les avantages du parrainage -->
+      <div class="benefits">
+        <h3>Avantages du Système de Parrainage</h3>
+        <ul>
+          <li>Bonus de 1% pour chaque inscription effectuée par vos filleuls, même sans dépôt.</li>
+          <li>Aucun bonus n'est attribué pour les dépôts réalisés par vos filleuls.</li>
+          <li>Si votre équipe compte plus de 500 membres, vous recevrez une récompense de 10 $.</li>
+          <li>Suivi en temps réel de vos parrainages et bonus, avec la possibilité de transférer vos gains lorsque le seuil est atteint.</li>
+        </ul>
+        <p>Développez votre réseau et maximisez vos récompenses grâce à notre système de parrainage transparent et avantageux !</p>
+      </div>
+      
       <p class="center">
         <a href="?ref=YOUR_INVITATION_CODE" id="goAuth">S'inscrire / Se Connecter</a>
       </p>
@@ -221,12 +218,9 @@
         <p class="center"><a href="#" id="forgotPassword">Mot de passe oublié ?</a></p>
         <p class="center">Pas de compte ? <a href="#" id="linkInscription">S'inscrire</a></p>
       </form>
-      
     </div>
-    
   </div>
   
-   
   <script>
     // Fonction pour obtenir un paramètre de l'URL
     function getParameterByName(name, url = window.location.href) {
@@ -238,27 +232,67 @@
       return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
     
+    // Fonction pour mettre à jour le dashboard de parrainage (si disponible)
+    function updateDashboard() {
+      let users = JSON.parse(localStorage.getItem("users") || "[]");
+      // Ici, nous utilisons le code par défaut "ABC123" comme identifiant du parrain si aucun ref n'est passé.
+      let parent = users.find(u => u.invitationCode === "ABC123");
+      if (parent) {
+        document.getElementById("parrainageCount").innerText = parent.referralCount || 0;
+        document.getElementById("bonusTotal").innerText = (parent.bonus || 0).toFixed(2);
+      }
+    }
+    
     document.addEventListener("DOMContentLoaded", function() {
       // Détection du paramètre "ref"
       let refParam = getParameterByName("ref");
       if (refParam) {
-        // Afficher la section Auth (inscription/connexion)
+        // Si le paramètre "ref" est présent, on affiche la section Auth (inscription/connexion)
         document.getElementById("authSection").style.display = "block";
         document.getElementById("referralDashboard").style.display = "none";
         // Pré-remplir le champ Code d'invitation
         document.getElementById("invitationCode").value = refParam;
       } else {
-        // Afficher le dashboard de parrainage
+        // Sinon, afficher le dashboard de parrainage
         document.getElementById("authSection").style.display = "none";
         document.getElementById("referralDashboard").style.display = "block";
-        // Pour cet exemple, on définit un code d'invitation par défaut (remplacez-le par celui du parrain)
+        // Pour cet exemple, on définit un code d'invitation par défaut
         let parrainCode = "ABC123";
         let baseUrl = window.location.href.split('?')[0];
         document.getElementById("invitationLink").value = baseUrl + "?ref=" + parrainCode;
-        // Simuler quelques statistiques
-        document.getElementById("parrainageCount").innerText = "5";
-        document.getElementById("bonusTotal").innerText = "0.05";
+        // Simuler quelques statistiques (vous pouvez appeler updateDashboard() si le parrain existe dans localStorage)
+        updateDashboard();
       }
+      
+      // Copier le lien d'invitation
+      document.getElementById("copyInvitation").addEventListener("click", function() {
+        let invitationLink = document.getElementById("invitationLink");
+        invitationLink.select();
+        invitationLink.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("Lien d'invitation copié !");
+      });
+      
+      // Gestion du bouton "Ajouter Bonus"
+      document.getElementById("addBonusBtn").addEventListener("click", function() {
+        // On suppose que le parrain est identifié par le code "ABC123"
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let parent = users.find(u => u.invitationCode === "ABC123");
+        if (!parent) {
+          alert("Aucun parrain enregistré.");
+          return;
+        }
+        if ((parent.bonus || 0) < 5) {
+          alert("Bonus insuffisant. Vous devez avoir au moins 5$ pour l'ajouter.");
+          return;
+        }
+        // Transférer le bonus vers le solde de retrait (withdrawableBonus) et réinitialiser le bonus
+        parent.withdrawableBonus = (parent.withdrawableBonus || 0) + parent.bonus;
+        parent.bonus = 0;
+        localStorage.setItem("users", JSON.stringify(users));
+        updateDashboard();
+        alert("Bonus ajouté et transféré !");
+      });
       
       // Gestion des onglets dans la section Auth
       document.getElementById("showInscription").addEventListener("click", function() {
@@ -351,6 +385,8 @@
         
         alert("Inscription réussie !");
         document.getElementById("inscriptionForm").reset();
+        // Optionnel : mettre à jour le dashboard si nous sommes en mode dashboard
+        updateDashboard();
       });
       
       // Gestion du formulaire de connexion
@@ -391,35 +427,6 @@
         invitationLink.setSelectionRange(0, 99999);
         document.execCommand("copy");
         alert("Lien d'invitation copié !");
-      });
-      
-      // Bouton "Ajouter Bonus" : si bonus >= 5, le transférer et réinitialiser le bonus à 0
-      document.getElementById("addBonusBtn").addEventListener("click", function() {
-        let currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-        if (!currentUser) {
-          alert("Veuillez vous connecter pour ajouter votre bonus.");
-          return;
-        }
-        if (currentUser.bonus < 5) {
-          alert("Bonus insuffisant. Vous devez avoir au moins 5$ de bonus pour l'ajouter.");
-          return;
-        }
-        // Transférer le bonus vers withdrawableBonus et réinitialiser bonus
-        currentUser.withdrawableBonus = (currentUser.withdrawableBonus || 0) + currentUser.bonus;
-        currentUser.bonus = 0;
-        // Mettre à jour l'utilisateur dans le tableau des utilisateurs
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        for (let i = 0; i < users.length; i++) {
-          if (users[i].phone === currentUser.phone) {
-            users[i] = currentUser;
-            break;
-          }
-        }
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        // Mise à jour de l'affichage du bonus dans le dashboard
-        document.getElementById("bonusTotal").innerText = "0.00";
-        alert("Bonus ajouté et transféré !");
       });
       
     }); // Fin DOMContentLoaded
