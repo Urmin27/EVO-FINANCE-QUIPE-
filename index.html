@@ -1,437 +1,90 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lien Référal - Inscription & Connexion</title>
-  <!-- Importation de la police Roboto -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
-  <style>
-    /* Réinitialisation et styles globaux */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: #333;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
-      font-size: 2.5em;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-    }
-    .container {
-      max-width: 600px;
-      background: #fff;
-      margin: 0 auto;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      animation: fadeIn 1s;
-    }
-    /* Referral Dashboard */
-    #referralDashboard {
-      margin-bottom: 20px;
-    }
-    #referralDashboard h2 {
-      margin-bottom: 15px;
-      color: #1e3c72;
-    }
-    .copy-field {
-      display: flex;
-      margin-top: 10px;
-    }
-    .copy-field input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px 0 0 5px;
-    }
-    .copy-field button {
-      padding: 8px;
-      border: none;
-      background: #2196f3;
-      color: #fff;
-      border-radius: 0 5px 5px 0;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-    }
-    /* Bouton Ajouter Bonus */
-    #addBonusBtn {
-      margin-top: 15px;
-      padding: 10px;
-      background: #ff9800;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    #addBonusBtn:hover {
-      transform: scale(1.05);
-    }
-    /* Paragraphe avantages */
-    .benefits {
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #f9f9f9;
-      color: #333;
-      animation: fadeIn 1s;
-    }
-    .benefits h3 {
-      margin-bottom: 10px;
-      color: #1e3c72;
-    }
-    .benefits ul {
-      text-align: left;
-      list-style-type: disc;
-      margin-left: 20px;
-    }
-    .benefits p {
-      margin-top: 10px;
-      font-style: italic;
-    }
-    /* Auth Section (Inscription / Connexion) */
-    #authSection { display: none; }
-    .tab-buttons { text-align: center; margin-bottom: 20px; }
-    .tab-buttons button { padding: 10px 20px; margin: 0 5px; cursor: pointer; }
-    form { display: none; flex-direction: column; }
-    form.active { display: flex; }
-    form label { margin-top: 10px; font-weight: bold; text-align: left; }
-    form input, form select { padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; width: 100%; }
-    form button { margin-top: 15px; padding: 10px; background: #4caf50; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-    p.center { text-align: center; }
-    a { color: #2196f3; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    /* Responsive */
-    @media (max-width: 600px) {
-      .container { width: 90%; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copier le lien</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Dégradé de couleur */
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px); /* Effet de flou */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        #lien {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            width: 70%;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        #copierBtn {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #ff6f61; /* Couleur du bouton */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #copierBtn:hover {
+            background-color: #ff3b2f; /* Couleur au survol */
+        }
+        .explication {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #fff;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .explication strong {
+            color: #ff6f61; /* Couleur pour les titres */
+        }
+    </style>
 </head>
 <body>
-  <h1>Lien Référal</h1>
-  <div class="container">
-    <!-- Referral Dashboard (affiché si aucun paramètre "ref" n'est présent) -->
-    <div id="referralDashboard">
-      <h2>Votre Lien d'Invitation</h2>
-      <div class="copy-field">
-        <input type="text" id="invitationLink" readonly>
-        <button id="copyInvitation">Copier</button>
-      </div>
-      <h3>Tableau de Parrainage</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre de Parrainages</th>
-            <th>Bonus Total ($)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="parrainageCount">0</td>
-            <td id="bonusTotal">0.00</td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Bouton Ajouter Bonus -->
-      <button id="addBonusBtn">Ajouter Bonus</button>
-      
-      <!-- Paragraphe des avantages du parrainage -->
-      <div class="benefits">
-        <h3>Avantages du Système de Parrainage</h3>
-        <ul>
-          <li>Bonus de 1% pour chaque inscription effectuée par vos filleuls, même sans dépôt.</li>
-          <li>Aucun bonus n'est attribué pour les dépôts réalisés par vos filleuls.</li>
-          <li>Si votre équipe compte plus de 500 membres, vous recevrez une récompense de 10 $.</li>
-          <li>Suivi en temps réel de vos parrainages et bonus, avec la possibilité de transférer vos gains lorsque le seuil est atteint.</li>
-        </ul>
-        <p>Développez votre réseau et maximisez vos récompenses grâce à notre système de parrainage transparent et avantageux !</p>
-      </div>
-      
-      <p class="center">
-        <a href="?ref=ABC123" id="goAuth">S'inscrire / Se Connecter</a>
-      </p>
+    <div class="container">
+        <input type="text" id="lien" value="https://evo-finance-inscription-ao1m.vercel.app/" readonly>
+        <button id="copierBtn">Copier</button>
+
+        <div class="explication">
+            <p><strong>Explication :</strong></p>
+            <p>Ce lien vous permet de participer à notre plateforme. Veuillez noter les points suivants :</p>
+            <ol>
+                <li><strong>Aucune récompense liée aux gains</strong> : Il n'y a pas de récompense ou de bonus directement lié aux gains que vous pourriez réaliser.</li>
+                <li><strong>Pas de système de parrainage</strong> : Nous n'utilisons pas de système de parrainage. Notre objectif est de croître grâce à l'utilisation de fonds investis.</li>
+                <li><strong>Cadeaux pour les dépôts</strong> : Si une personne a été incitée à faire un dépôt grâce à vous, veuillez nous contacter. Nous offrirons un cadeau à cette personne en guise de remerciement.</li>
+            </ol>
+            <p>N'hésitez pas à nous contacter pour toute question ou clarification supplémentaire.</p>
+        </div>
     </div>
-    
-    <!-- Auth Section (affiché si le paramètre "ref" est présent dans l'URL) -->
-    <div id="authSection">
-      <div class="tab-buttons">
-        <button id="showInscription">Inscription</button>
-        <button id="showConnexion">Connexion</button>
-      </div>
-      <!-- Formulaire d'inscription -->
-      <form id="inscriptionForm" class="active">
-        <h3>Inscription</h3>
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" required>
-        
-        <label for="phone">Numéro de téléphone :</label>
-        <input type="text" id="phone" required>
-        
-        <label for="email">Email :</label>
-        <input type="email" id="email" required>
-        
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" required>
-        
-        <label id="captchaLabel"></label>
-        <input type="text" id="captchaAnswer" required>
-        
-        <!-- Code d'invitation auto-rempli -->
-        <label for="invitationCode">Code d'invitation :</label>
-        <input type="text" id="invitationCode" readonly>
-        
-        <button type="submit">S'inscrire</button>
-        <p class="center">Déjà un compte ? <a href="#" id="linkConnexion">Se connecter</a></p>
-      </form>
-      
-      <!-- Formulaire de connexion -->
-      <form id="connexionForm">
-        <h3>Connexion</h3>
-        <label for="loginPhone">Numéro de téléphone :</label>
-        <input type="text" id="loginPhone" required>
-        
-        <label for="loginPassword">Mot de passe :</label>
-        <input type="password" id="loginPassword" required>
-        
-        <button type="submit">Se connecter</button>
-        <p class="center"><a href="#" id="forgotPassword">Mot de passe oublié ?</a></p>
-        <p class="center">Pas de compte ? <a href="#" id="linkInscription">S'inscrire</a></p>
-      </form>
-    </div>
-  </div>
-  
-  <script>
-    // Fonction pour obtenir un paramètre de l'URL
-    function getParameterByName(name, url = window.location.href) {
-      name = name.replace(/[\[\]]/g, '\\$&');
-      let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-          results = regex.exec(url);
-      if (!results) return null;
-      if (!results[2]) return '';
-      return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    
-    // Fonction pour mettre à jour le dashboard de parrainage
-    function updateDashboard() {
-      let users = JSON.parse(localStorage.getItem("users") || "[]");
-      // On utilise ici le code du parrain, par défaut "ABC123"
-      let parent = users.find(u => u.invitationCode === "ABC123");
-      if (parent) {
-        document.getElementById("parrainageCount").innerText = parent.referralCount || 0;
-        document.getElementById("bonusTotal").innerText = (parent.bonus || 0).toFixed(2);
-      }
-    }
-    
-    document.addEventListener("DOMContentLoaded", function() {
-      // Si aucun paramètre "ref" n'est présent, afficher le dashboard
-      let refParam = getParameterByName("ref");
-      if (refParam) {
-        document.getElementById("authSection").style.display = "block";
-        document.getElementById("referralDashboard").style.display = "none";
-        document.getElementById("invitationCode").value = refParam;
-      } else {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("referralDashboard").style.display = "block";
-        // S'assurer que le parrain (code "ABC123") existe dans le localStorage
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        let parent = users.find(u => u.invitationCode === "ABC123");
-        if (!parent) {
-          parent = {
-            username: "Parrain",
-            phone: "0000000000",
-            email: "parrain@example.com",
-            password: "default",
-            invitationCode: "ABC123",
-            referralCount: 0,
-            bonus: 0,
-            withdrawableBonus: 0
-          };
-          users.push(parent);
-          localStorage.setItem("users", JSON.stringify(users));
-        }
-        // Générer le lien d'invitation pour le parrain
-        let baseUrl = window.location.href.split('?')[0];
-        document.getElementById("invitationLink").value = baseUrl + "?ref=" + parent.invitationCode;
-        updateDashboard();
-      }
-      
-      // Copier le lien d'invitation
-      document.getElementById("copyInvitation").addEventListener("click", function() {
-        let invitationLink = document.getElementById("invitationLink");
-        invitationLink.select();
-        invitationLink.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        alert("Lien d'invitation copié !");
-      });
-      
-      // Gestion du bouton "Ajouter Bonus"
-      document.getElementById("addBonusBtn").addEventListener("click", function() {
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        let parent = users.find(u => u.invitationCode === "ABC123");
-        if (!parent) {
-          alert("Aucun parrain enregistré.");
-          return;
-        }
-        if ((parent.bonus || 0) < 5) {
-          alert("Bonus insuffisant. Vous devez avoir au moins 5$ pour l'ajouter.");
-          return;
-        }
-        parent.withdrawableBonus = (parent.withdrawableBonus || 0) + parent.bonus;
-        parent.bonus = 0;
-        localStorage.setItem("users", JSON.stringify(users));
-        updateDashboard();
-        alert("Bonus ajouté et transféré !");
-      });
-      
-      // Gestion des onglets dans la section Auth
-      document.getElementById("showInscription").addEventListener("click", function() {
-        document.getElementById("inscriptionForm").classList.add("active");
-        document.getElementById("connexionForm").classList.remove("active");
-      });
-      document.getElementById("showConnexion").addEventListener("click", function() {
-        document.getElementById("connexionForm").classList.add("active");
-        document.getElementById("inscriptionForm").classList.remove("active");
-      });
-      document.getElementById("linkConnexion").addEventListener("click", function(e) {
-        e.preventDefault();
-        document.getElementById("connexionForm").classList.add("active");
-        document.getElementById("inscriptionForm").classList.remove("active");
-      });
-      document.getElementById("linkInscription").addEventListener("click", function(e) {
-        e.preventDefault();
-        document.getElementById("inscriptionForm").classList.add("active");
-        document.getElementById("connexionForm").classList.remove("active");
-      });
-      
-      // Génération d'un captcha simple
-      let a = Math.floor(Math.random() * 10) + 1;
-      let b = Math.floor(Math.random() * 10) + 1;
-      document.getElementById("captchaLabel").innerText = "Combien font " + a + " + " + b + " ?";
-      let captchaResult = a + b;
-      
-      // Gestion du formulaire d'inscription
-      document.getElementById("inscriptionForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const username = document.getElementById("username").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const enteredCaptcha = parseInt(document.getElementById("captchaAnswer").value);
-        const invitationCodeFromForm = document.getElementById("invitationCode").value.trim();
-        
-        if (enteredCaptcha !== captchaResult) {
-          alert("Captcha incorrect. Veuillez réessayer.");
-          a = Math.floor(Math.random() * 10) + 1;
-          b = Math.floor(Math.random() * 10) + 1;
-          document.getElementById("captchaLabel").innerText = "Combien font " + a + " + " + b + " ?";
-          captchaResult = a + b;
-          return;
-        }
-        
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        if (users.find(u => u.username === username)) {
-          alert("Nom d'utilisateur déjà utilisé.");
-          return;
-        }
-        if (users.find(u => u.phone === phone)) {
-          alert("Numéro de téléphone déjà utilisé.");
-          return;
-        }
-        if (users.find(u => u.email === email)) {
-          alert("Email déjà utilisé.");
-          return;
-        }
-        
-        let newInvCode = Math.floor(100000 + Math.random() * 900000).toString();
-        let newUser = {
-          username: username,
-          phone: phone,
-          email: email,
-          password: password,
-          invitationCode: newInvCode,
-          referralCount: 0,
-          bonus: 0,
-          withdrawableBonus: 0
-        };
-        
-        users.push(newUser);
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("currentUser", JSON.stringify(newUser));
-        
-        if (invitationCodeFromForm) {
-          let refUser = users.find(u => u.invitationCode === invitationCodeFromForm);
-          if (refUser) {
-            refUser.referralCount = (refUser.referralCount || 0) + 1;
-            refUser.bonus = (refUser.bonus || 0) + 0.01;
-            localStorage.setItem("users", JSON.stringify(users));
-          }
-        }
-        
-        alert("Inscription réussie !");
-        document.getElementById("inscriptionForm").reset();
-      });
-      
-      // Gestion du formulaire de connexion
-      document.getElementById("connexionForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const phone = document.getElementById("loginPhone").value.trim();
-        const password = document.getElementById("loginPassword").value;
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        let user = users.find(u => u.phone === phone && u.password === password);
-        if (!user) {
-          alert("Numéro de téléphone ou mot de passe incorrect.");
-          return;
-        }
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        alert("Connexion réussie !");
-        window.location.href = "https://we-evo-finance.vercel.app/";
-      });
-      
-      // Mot de passe oublié
-      document.getElementById("forgotPassword").addEventListener("click", function(e) {
-        e.preventDefault();
-        let phone = prompt("Veuillez entrer votre numéro de téléphone :");
-        if (!phone) return;
-        let users = JSON.parse(localStorage.getItem("users") || "[]");
-        let user = users.find(u => u.phone === phone.trim());
-        if (user) {
-          alert("Votre mot de passe est : " + user.password);
-        } else {
-          alert("Numéro de téléphone non trouvé.");
-        }
-      });
-      
-      // Copier le lien d'invitation
-      document.getElementById("copyInvitation").addEventListener("click", function() {
-        let invitationLink = document.getElementById("invitationLink");
-        invitationLink.select();
-        invitationLink.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        alert("Lien d'invitation copié !");
-      });
-      
-    });
-  </script>
+
+    <script>
+        document.getElementById('copierBtn').addEventListener('click', function() {
+            const lien = document.getElementById('lien');
+            lien.select();
+            document.execCommand('copy');
+            alert('Lien copié !');
+        });
+    </script>
 </body>
 </html>
